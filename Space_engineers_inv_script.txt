@@ -1,5 +1,5 @@
 // TODO: 
-//             Implement script for checking queue more components if below certain level and setting minimun levels
+// 
 
 public Program()
 {
@@ -47,7 +47,7 @@ Dictionary<string, Component> CompList = new Dictionary<string, Component>();
 
 public void InitComp()
 {
-    // CHANGE MINIMUN VALUES HERE BY CHANGING THE LAST NUMBER
+    // CHANGE MINIMUM VALUES HERE BY CHANGING THE LAST NUMBER
     CompList.Add("SteelPlate", new Component("Steel Plates", "SteelPlate", "SteelPlate", 0, 30000));
     CompList.Add("InteriorPlate", new Component("Interior Plates", "InteriorPlate", "InteriorPlate", 0, 30000));
     CompList.Add("Construction", new Component("Construction Components", "Construction", "ConstructionComponent", 0, 30000));
@@ -59,8 +59,6 @@ public void InitComp()
     CompList.Add("MetalGrid", new Component("Metal Grids", "MetalGrid", "MetalGrid", 0, 10000));
     CompList.Add("Motor", new Component("Motors", "Motor", "MotorComponent", 0, 10));
     CompList.Add("Thrust", new Component("Thruster Comp.", "Thrust", "ThrustComponent", 0, 1000));
-                    // FUCK THIS COMPONENT
-                    // ----------------V----------------
     CompList.Add("BulletproofGlass", new Component("Bulletproof Glass", "BulletproofGlass", "BulletproofGlass", 0, 50));
     CompList.Add("PowerCell", new Component("Power Cells", "PowerCell", "PowerCell", 0, 10));
     CompList.Add("SolarCell", new Component("Solar Cells", "SolarCell", "SolarCell", 0, 10));
@@ -200,14 +198,14 @@ public IMyAssembler FindAvailableAssembler()
         {
             currentMax += (int)item.Amount;
         }
-        Echo ($"{currentMax} and {prevMax}");
+        
         if (currentMax < prevMax || prevMax == 0)
         {
             prevMax = currentMax;
             index = i;
         }
     }
-    Echo (index.ToString());
+    
     return (IMyAssembler)Containers[index];
 }
 
