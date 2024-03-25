@@ -1,6 +1,3 @@
-// TODO: 
-// 
-
 public Program()
 {
     Runtime.UpdateFrequency = UpdateFrequency.Update100;
@@ -24,15 +21,16 @@ public class Component
     public int MinAmount {get;}
     public MyItemType ItemType {get; set;}
     public MyDefinitionId Blueprint {get; set;}
-    
+
     public Component(string name, string id, int amount, int minAmount)
     {
         Name = name;
         Id = id;
         Amount = amount;
         MinAmount = minAmount;
+        DefinitionId = id;
     }
-    
+
     public Component(string name, string id, string definitionId, int amount, int minAmount)
     {
         Name = name;
@@ -47,27 +45,29 @@ Dictionary<string, Component> CompList = new Dictionary<string, Component>();
 
 public void InitComp()
 {
-    // CHANGE MINIMUM VALUES HERE BY CHANGING THE LAST NUMBER
-    CompList.Add("SteelPlate", new Component("Steel Plates", "SteelPlate", "SteelPlate", 0, 30000));
-    CompList.Add("InteriorPlate", new Component("Interior Plates", "InteriorPlate", "InteriorPlate", 0, 30000));
-    CompList.Add("Construction", new Component("Construction Components", "Construction", "ConstructionComponent", 0, 30000));
-    CompList.Add("Display", new Component("Displays", "Display", "Display", 0, 1000));
+    // CHANGE MINIMUN VALUES HERE BY CHANGING THE LAST NUMBER
+    CompList.Add("SteelPlate", new Component("Steel Plates", "SteelPlate", 0, 50000));
+    CompList.Add("InteriorPlate", new Component("Interior Plates", "InteriorPlate", 0, 50000));
+    CompList.Add("Construction", new Component("Construction Components", "Construction", "ConstructionComponent", 0, 50000));
+    CompList.Add("Display", new Component("Displays", "Display", 0, 1000));
     CompList.Add("Computer", new Component("Computers", "Computer", "ComputerComponent", 0, 10000));
     CompList.Add("Girder", new Component("Girders", "Girder", "GirderComponent", 0, 10000));
-    CompList.Add("LargeTube", new Component("Large Steel Tubes", "LargeTube", "LargeTube", 0, 10000));
-    CompList.Add("SmallTube", new Component("Small Steel Tubes", "SmallTube", "SmallTube", 0, 10000));
-    CompList.Add("MetalGrid", new Component("Metal Grids", "MetalGrid", "MetalGrid", 0, 10000));
+    CompList.Add("LargeTube", new Component("Large Steel Tubes", "LargeTube", 0, 10000));
+    CompList.Add("SmallTube", new Component("Small Steel Tubes", "SmallTube", 0, 10000));
+    CompList.Add("MetalGrid", new Component("Metal Grids", "MetalGrid", 0, 10000));
     CompList.Add("Motor", new Component("Motors", "Motor", "MotorComponent", 0, 10));
     CompList.Add("Thrust", new Component("Thruster Comp.", "Thrust", "ThrustComponent", 0, 1000));
-    CompList.Add("BulletproofGlass", new Component("Bulletproof Glass", "BulletproofGlass", "BulletproofGlass", 0, 50));
-    CompList.Add("PowerCell", new Component("Power Cells", "PowerCell", "PowerCell", 0, 10));
-    CompList.Add("SolarCell", new Component("Solar Cells", "SolarCell", "SolarCell", 0, 10));
+                    // FUCK THIS COMPONENT
+                    // ----------------V----------------
+    CompList.Add("BulletproofGlass", new Component("Bulletproof Glass", "BulletproofGlass", 0, 50));
+    CompList.Add("PowerCell", new Component("Power Cells", "PowerCell", 0, 10));
+    CompList.Add("SolarCell", new Component("Solar Cells", "SolarCell", 0, 10));
     CompList.Add("Detector", new Component("Detector Components", "Detector", "DetectorComponent", 0, 10));
     CompList.Add("Medical", new Component("Medical Comp.", "Medical", "MedicalComponent", 0, 100));
     CompList.Add("RadioCommunication", new Component("Radio-Communication Comp.", "RadioCommunication", "RadioCommunicationComponent", 0, 10));
     CompList.Add("Reactor", new Component("Reactor Comp.", "Reactor", "ReactorComponent", 0, 10));
     CompList.Add("GravityGenerator", new Component("Gravity Comp.", "GravityGenerator", "GravityGeneratorComponent", 0, 10));
-    CompList.Add("Superconductor", new Component("Superconductors", "Superconductor", "Superconductor", 0, 10));
+    CompList.Add("Superconductor", new Component("Superconductors", "Superconductor", 0, 10));
 
     foreach(var item in CompList.Values)
     {
@@ -95,8 +95,14 @@ public void InitScreens()
     screenGroup.GetBlocks(Screens);
 }
 
+public void PrintToScreen(string input, bool append, int screenNumber)
+{
+    IMyTextPanel outputScreen = (IMyTextPanel)Screens[screenNumber];
+    outputScreen.WriteText(input + "\n", append);
+}
+
 // Finds all amounts of items in the base cargo containers and assemblers, only prints result for cargo containers
-public int FindItemAmount()
+public void FindItemAmount()
 {
     int amount = 0;
     int number = 0;
@@ -111,10 +117,9 @@ public int FindItemAmount()
             IMyProductionBlock assembler = (IMyProductionBlock)block;
             inventory = assembler.OutputInventory;
         }
-        
+
         number = int.Parse(block.CustomName[block.CustomName.Length -1].ToString())-1;
-        
-        
+
         if (block.CustomName.Contains("Cargo")) {
             PrintToScreen(block.CustomName, false, number);
         }
@@ -123,7 +128,7 @@ public int FindItemAmount()
         {
             amount = (int)inventory.GetItemAmount(item.ItemType);
             item.Amount += amount;
-            
+
             if (block.CustomName.Contains("Cargo")) {
                 PrintToScreen($"{item.Name}: {amount}", true, number);
             }
@@ -135,10 +140,9 @@ public int FindItemAmount()
     {
         PrintToScreen($"{item.Name}: {item.Amount}", true, 2);
     }
-    return amount;
 }
 
-// Checks the amount of components compared to their minimun amount
+// Checks the amount of components compared to their minimun amount and queues new components
 public void CheckItemAmount()
 {
     List<MyProductionItem> queue = new List<MyProductionItem>();
@@ -157,24 +161,23 @@ public void CheckItemAmount()
                 queueAmount.Add(name[1], (int)item.Amount);           
         }
     }
-    PrintToScreen($"\nCurrently queued components:", true, 1);
+    PrintToScreen($"\nCurrently queued components:", false, 3);
     foreach (var item in queueAmount)
     {
-        PrintToScreen($"{item.Key}: {item.Value}", true, 1);
+        PrintToScreen($"{item.Key}: {item.Value}", true, 3);
     }
     
-    PrintToScreen ($"\nComponents below minimun amount:", true, 2);
+    PrintToScreen ($"\nComponents below minimun amount:", true, 3);
     foreach (var comp in CompList.Values)
     {
-        
         int itemQueueAmount = queueAmount.ContainsKey(comp.DefinitionId)? queueAmount[comp.DefinitionId] : 0;
         if ((comp.Amount + itemQueueAmount) < comp.MinAmount)
         {
             int diff = comp.MinAmount - (comp.Amount + itemQueueAmount);
-            PrintToScreen ($"{comp.Name} by {diff}", true, 2);
-            
-            IMyAssembler assembler = FindAvailableAssembler();          
-            
+            PrintToScreen ($"{comp.Name} by {diff}", true, 3);
+
+            IMyAssembler assembler = FindAvailableAssembler();
+
             assembler.AddQueueItem(comp.Blueprint, (MyFixedPoint)diff);
         }
     }
@@ -198,7 +201,7 @@ public IMyAssembler FindAvailableAssembler()
         {
             currentMax += (int)item.Amount;
         }
-        
+
         if (currentMax < prevMax || prevMax == 0)
         {
             prevMax = currentMax;
@@ -207,10 +210,4 @@ public IMyAssembler FindAvailableAssembler()
     }
     
     return (IMyAssembler)Containers[index];
-}
-
-public void PrintToScreen(string input, bool append, int screenNumber)
-{
-    IMyTextPanel outputScreen = (IMyTextPanel)Screens[screenNumber];
-    outputScreen.WriteText(input + "\n", append);
 }
