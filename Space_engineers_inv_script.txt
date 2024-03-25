@@ -1,6 +1,6 @@
 public Program()
 {
-    Runtime.UpdateFrequency = UpdateFrequency.Update100;
+    //Runtime.UpdateFrequency = UpdateFrequency.Update100;
     InitScreens();
     InitComp();
     InitContainers();
@@ -8,6 +8,8 @@ public Program()
 
 public void Main(string argument, UpdateType Update100)
 {
+    InitScreens();
+InitContainers();
     FindItemAmount();
     CheckItemAmount();
 }
@@ -83,6 +85,18 @@ public void InitContainers()
     string containerGroupName = "Base Component Containers";
     var containerGroup = GridTerminalSystem.GetBlockGroupWithName(containerGroupName);
     containerGroup.GetBlocks(Containers);
+
+    PrintToScreen($"Initializing containers", true, 5);
+
+    foreach (var container in Containers)
+    {
+        PrintToScreen($"container -{container.CustomName}- found", true, 5);
+    }
+    
+    if (Containers.Count > 0)
+        PrintToScreen($"{Containers.Count} containers found", true, 5);
+    else
+        PrintToScreen($"No containers found", true, 5);
 }
 
 List<IMyTerminalBlock> Screens = new List<IMyTerminalBlock>();
@@ -91,6 +105,18 @@ public void InitScreens()
     string screenGroupName = "Base Output Screens";
     var screenGroup = GridTerminalSystem.GetBlockGroupWithName(screenGroupName);
     screenGroup.GetBlocks(Screens);
+
+    PrintToScreen($"Initializing screens", false, 5);
+
+    foreach (var screen in Screens)
+    {
+        PrintToScreen($"Screen -{screen.CustomName}- found", true, 5);
+    }
+    
+    if (Screens.Count > 0)
+        PrintToScreen($"{Screens.Count} screens found", true, 5);
+    else
+        PrintToScreen($"No screens found", true, 5);
 }
 
 public void PrintToScreen(string input, bool append, int screenNumber)
