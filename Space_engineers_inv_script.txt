@@ -57,8 +57,6 @@ public void InitComp()
     CompList.Add("MetalGrid", new Component("Metal Grids", "MetalGrid", 0, 10000));
     CompList.Add("Motor", new Component("Motors", "Motor", "MotorComponent", 0, 10));
     CompList.Add("Thrust", new Component("Thruster Comp.", "Thrust", "ThrustComponent", 0, 1000));
-                    // FUCK THIS COMPONENT
-                    // ----------------V----------------
     CompList.Add("BulletproofGlass", new Component("Bulletproof Glass", "BulletproofGlass", 0, 50));
     CompList.Add("PowerCell", new Component("Power Cells", "PowerCell", 0, 10));
     CompList.Add("SolarCell", new Component("Solar Cells", "SolarCell", 0, 10));
