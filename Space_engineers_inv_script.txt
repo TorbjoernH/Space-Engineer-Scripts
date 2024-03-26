@@ -1,6 +1,6 @@
 public Program()
 {
-    //Runtime.UpdateFrequency = UpdateFrequency.Update100;
+    Runtime.UpdateFrequency = UpdateFrequency.Update100;
     InitScreens();
     InitComp();
     InitContainers();
@@ -8,8 +8,6 @@ public Program()
 
 public void Main(string argument, UpdateType Update100)
 {
-    InitScreens();
-InitContainers();
     FindItemAmount();
     CheckItemAmount();
 }
@@ -86,17 +84,17 @@ public void InitContainers()
     var containerGroup = GridTerminalSystem.GetBlockGroupWithName(containerGroupName);
     containerGroup.GetBlocks(Containers);
 
-    PrintToScreen($"Initializing containers", true, 5);
+    Echo($"Initializing containers");
 
     foreach (var container in Containers)
     {
-        PrintToScreen($"container -{container.CustomName}- found", true, 5);
+        Echo($"container -{container.CustomName}- found");
     }
     
     if (Containers.Count > 0)
-        PrintToScreen($"{Containers.Count} containers found", true, 5);
+        Echo($"{Containers.Count} containers found");
     else
-        PrintToScreen($"No containers found", true, 5);
+        Echo($"No containers found");
 }
 
 List<IMyTerminalBlock> Screens = new List<IMyTerminalBlock>();
@@ -106,17 +104,17 @@ public void InitScreens()
     var screenGroup = GridTerminalSystem.GetBlockGroupWithName(screenGroupName);
     screenGroup.GetBlocks(Screens);
 
-    PrintToScreen($"Initializing screens", false, 5);
+    Echo($"Initializing screens");
 
     foreach (var screen in Screens)
     {
-        PrintToScreen($"Screen -{screen.CustomName}- found", true, 5);
+        Echo($"Screen -{screen.CustomName}- found");
     }
     
     if (Screens.Count > 0)
-        PrintToScreen($"{Screens.Count} screens found", true, 5);
+        Echo($"{Screens.Count} screens found");
     else
-        PrintToScreen($"No screens found", true, 5);
+        Echo($"No screens found");
 }
 
 public void PrintToScreen(string input, bool append, int screenNumber)
@@ -125,7 +123,7 @@ public void PrintToScreen(string input, bool append, int screenNumber)
     outputScreen.WriteText(input + "\n", append);
 }
 
-// Finds all amounts of items in the base cargo containers and assemblers, only prints result for cargo containers
+// Finds all amounts of items in the base cargo containers and assemblers
 public void FindItemAmount()
 {
     int amount = 0;
@@ -143,23 +141,15 @@ public void FindItemAmount()
         }
 
         number = int.Parse(block.CustomName[block.CustomName.Length -1].ToString())-1;
-
-        if (block.CustomName.Contains("Cargo")) {
-            PrintToScreen(block.CustomName, false, number);
-        }
-
+        
         foreach (var item in CompList.Values)
         {
             amount = (int)inventory.GetItemAmount(item.ItemType);
             item.Amount += amount;
-
-            if (block.CustomName.Contains("Cargo")) {
-                PrintToScreen($"{item.Name}: {amount}", true, number);
-            }
         }
     }
 
-    PrintToScreen("Total item amount including Assembler:", false, 2);
+    PrintToScreen("Total item amount including Assemblers:", false, 2);
     foreach (var item in CompList.Values)
     {
         PrintToScreen($"{item.Name}: {item.Amount}", true, 2);
