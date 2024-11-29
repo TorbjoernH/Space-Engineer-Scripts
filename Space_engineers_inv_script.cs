@@ -11,6 +11,7 @@ public void Main(string argument, UpdateType Update100)
 {
     FindItemAmount();
     CheckItemAmount();
+    ReadSettings();
 }
 
 public class Component
@@ -19,7 +20,7 @@ public class Component
     public string Id {get;}
     public string DefinitionId {get;}
     public int Amount {get; set;}
-    public int MinAmount {get;}
+    public int MinAmount {get; set;}
     public MyItemType ItemType {get; set;}
     public MyDefinitionId Blueprint {get; set;}
 
@@ -116,8 +117,8 @@ public void InitScreens()
     var screenGroup = GridTerminalSystem.GetBlockGroupWithName(screenGroupName);
     screenGroup.GetBlocks(Screens);
     */
-    var compListScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("Base Component List Screen");
-    var compQueueScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("Base Component Queue Screen");
+    var compListScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("[Base] Component List Screen");
+    var compQueueScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("[Base] Component Queue Screen");
     Screens.Add(compListScreen);
     Screens.Add(compQueueScreen);
 
@@ -244,16 +245,18 @@ public IMyAssembler FindAvailableAssembler()
 
 public void ReadSettings()
 {
-    var settingsBlock = GridTerminalSystem.GetBlockWithName("Base Component Settings");
+    var settingsBlock = GridTerminalSystem.GetBlockWithName("[Base] Base Component Setup");
     string readString = settingsBlock.CustomData;
+    Echo("readString");
     if (readString != null)
     {
+        Echo("Test");
         string[] storage = readString.Split(';');
-        
-        for (int i; i<readString.Count; i++;)
+        int FUCK = storage.Count();
+        for (int i = 0; i < FUCK; i++) 
         {
             string[] item = storage[i].Split(',');
-            CompList[item[0]].MinAmount = item[1];
+            CompList[item[0]].MinAmount = Int32.Parse(item[1]);
         }
     }
     

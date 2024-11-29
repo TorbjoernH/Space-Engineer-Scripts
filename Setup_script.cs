@@ -11,7 +11,6 @@ public void Save()
 
 public void Main(string argument, UpdateType updateSource)
 {
-    
     int c = Int32.Parse(argument);
     Control((Controls)c);
     PrintAll();
@@ -36,31 +35,31 @@ public class Comp
 public List<Comp> CompMinAmount = new List<Comp>();
 public void Setup()
 {
-    CompMinAmount.Add(new Comp("Steel Plates", 0, true));
-    CompMinAmount.Add(new Comp("Interior Plates", 0, false)); 
-    CompMinAmount.Add(new Comp("Construction Components", 0, false)); 
-    CompMinAmount.Add(new Comp("Displays", 0, false));
-    CompMinAmount.Add(new Comp("Computers", 0, false));
-    CompMinAmount.Add(new Comp("Girders", 0, false)); 
-    CompMinAmount.Add(new Comp("Large Steel Tubes", 0, false));                                        
-    CompMinAmount.Add(new Comp("Small Steel Tubes", 0, false)); 
-    CompMinAmount.Add(new Comp("Metal Grids", 0, false));
-    CompMinAmount.Add(new Comp("Motors", 0, false)); 
-    CompMinAmount.Add(new Comp("Thruster Components", 0, false)); 
-    CompMinAmount.Add(new Comp("Bulletproof Glass", 0, false));
-    CompMinAmount.Add(new Comp("Power Cells", 0, false));                                          
-    CompMinAmount.Add(new Comp("Solar Cells", 0, false));
-    CompMinAmount.Add(new Comp("Detector Components", 0, false));
-    CompMinAmount.Add(new Comp("Medical Components", 0, false));
-    CompMinAmount.Add(new Comp("Radio-Communication Comp.", 0, false));                                           
-    CompMinAmount.Add(new Comp("Reactor Components", 0, false));
-    CompMinAmount.Add(new Comp("Gravity Components", 0, false));
-    CompMinAmount.Add(new Comp("Superconductors", 0, false));
+    CompMinAmount.Add(new Comp("Steel Plates", "SteelPlate", 10000, true));
+    CompMinAmount.Add(new Comp("Interior Plates", "InteriorPlate", 5000, false));
+    CompMinAmount.Add(new Comp("Construction Components", "Construction", 5000, false));
+    CompMinAmount.Add(new Comp("Displays", "Display", 500, false));
+    CompMinAmount.Add(new Comp("Computers", "Computer", 5000, false));
+    CompMinAmount.Add(new Comp("Girders", "Girder", 500, false));
+    CompMinAmount.Add(new Comp("Large Steel Tubes", "LargeTube", 1000, false));
+    CompMinAmount.Add(new Comp("Small Steel Tubes", "SmallTube", 1000, false));
+    CompMinAmount.Add(new Comp("Metal Grids", "MetalGrid", 500, false));
+    CompMinAmount.Add(new Comp("Motors", "Motor", 1000, false));
+    CompMinAmount.Add(new Comp("Thruster Comp.", "Thrust", 0, false));
+    CompMinAmount.Add(new Comp("Bulletproof Glass", "BulletproofGlass", 500, false));
+    CompMinAmount.Add(new Comp("Power Cells", "PowerCell", 100, false));
+    CompMinAmount.Add(new Comp("Solar Cells", "SolarCell", 0, false));
+    CompMinAmount.Add(new Comp("Detector Components", "Detector", 0, false));
+    CompMinAmount.Add(new Comp("Medical Comp.", "Medical", 0, false));
+    CompMinAmount.Add(new Comp("Radio-Communication Comp.", "RadioCommunication", 0, false));
+    CompMinAmount.Add(new Comp("Reactor Comp.", "Reactor", 0, false));
+    CompMinAmount.Add(new Comp("Gravity Comp.", "GravityGenerator", 0, false));
+    CompMinAmount.Add(new Comp("Superconductors", "Superconductor", 0, false));
 }
 
 public void Output(string text, bool append)
 {
-    IMyTextPanel screen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("Setup Screen");
+    IMyTextPanel screen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("[Base] Component Setup Screen");
     screen.WriteText(text + "\n", append);
 }
 
@@ -140,15 +139,15 @@ public void Control(Controls c)
 
 public void PrintAll()
 {
-    Output("Component:         Minimum amount:", false);
+    Output("Minimum amount:         Component:", false);
 
     int length = 35;
     foreach (var comp in CompMinAmount)
     {
         if (comp.Selected)
-            Output($"{("-->"+comp.Name+"<--").PadRight(length).Substring(0, length)}{comp.MinAmount}", true);
+            Output($"{comp.MinAmount}{("-->"+comp.Name+"<--").PadLeft(length).Substring(0, length)}", true);
         else
-            Output($"{comp.Name.PadRight(length).Substring(0, length)}{comp.MinAmount}", true);
+            Output($"{comp.MinAmount }{comp.Name.PadLeft(length).Substring(0, length)}", true);
             
     }
 }
@@ -158,12 +157,12 @@ public void SaveSettings()
     Echo("Saving Settings");
 
     var self = GridTerminalSystem.GetBlockWithName(Me.CustomName);
-    string[] storage = new string[CompMinAmount.Count];
-    for(int i; i<CompMinAmount.Count; i++;)
+    string[] storage = new string[CompMinAmount.Count()];
+    for(int i = 0; i<CompMinAmount.Count(); i++)
     {
-        string[i] = $"{CompMinAmount[i].Name},{CompMinAmount[i].MinAmount}" ;
+        storage[i] = $"{CompMinAmount[i].Id},{CompMinAmount[i].MinAmount}" ;
     }
 
-    string.Join(';', storage);
-    self.CustomData = storage;
+    string s = string.Join(";", storage);
+    self.CustomData = s;
 }
