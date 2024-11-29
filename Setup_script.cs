@@ -20,12 +20,14 @@ public void Main(string argument, UpdateType updateSource)
 public class Comp
 {
     public string Name {get;}
+    public string Id {get;}
     public int MinAmount {get; set;}
     public bool Selected {get; set;}
     
-    public Comp(string name, int minAmount, bool selected)
+    public Comp(string name, string id, int minAmount, bool selected)
     {
         Name = name;
+        Id = id;
         MinAmount = minAmount;
         Selected = selected;
     }

@@ -111,9 +111,15 @@ public void InitAssemblers()
 List<IMyTerminalBlock> Screens = new List<IMyTerminalBlock>();
 public void InitScreens()
 {
+    /*
     string screenGroupName = "Base Output Screens";
     var screenGroup = GridTerminalSystem.GetBlockGroupWithName(screenGroupName);
     screenGroup.GetBlocks(Screens);
+    */
+    var compListScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("Base Component List Screen");
+    var compQueueScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("Base Component Queue Screen");
+    Screens.Add(compListScreen);
+    Screens.Add(compQueueScreen);
 
     Echo($"Initializing screens");
 
@@ -234,4 +240,21 @@ public IMyAssembler FindAvailableAssembler()
     }
     
     return (IMyAssembler)Containers[index];
+}
+
+public void ReadSettings()
+{
+    var settingsBlock = GridTerminalSystem.GetBlockWithName("Base Component Settings");
+    string readString = settingsBlock.CustomData;
+    if (readString != null)
+    {
+        string[] storage = readString.Split(';');
+        
+        for (int i; i<readString.Count; i++;)
+        {
+            string[] item = storage[i].Split(',');
+            CompList[item[0]].MinAmount = item[1];
+        }
+    }
+    
 }
