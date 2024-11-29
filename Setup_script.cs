@@ -64,7 +64,7 @@ public void Output(string text, bool append)
 
 public enum Controls
 {
-    Up, Down, Reset,
+    Up, Down, Reset, Save,
     Increase10 = 10,
     Increase100 = 100,
     Increase1000 = 1000,
@@ -121,6 +121,11 @@ public void Control(Controls c)
                 comp.MinAmount = 0;
             }
             break;
+        case Controls.Save:
+        {
+            SaveSettings();
+            break;
+        }
         case Controls.Increase10: case Controls.Increase100: case Controls.Increase1000: case Controls.Increase10000:
             Increase(CompMinAmount[i], (int)c);
             break;
@@ -144,4 +149,19 @@ public void PrintAll()
             Output($"{comp.Name.PadRight(length).Substring(0, length)}{comp.MinAmount}", true);
             
     }
+}
+
+public void SaveSettings()
+{
+    Echo("Saving Settings");
+
+    var self = GridTerminalSystem.GetBlockWithName(Me.CustomName);
+    string[] storage = new string[CompMinAmount.Count];
+    for(int i; i<CompMinAmount.Count; i++;)
+    {
+        string[i] = $"{CompMinAmount[i].Name},{CompMinAmount[i].MinAmount}" ;
+    }
+
+    string.Join(';', storage);
+    self.CustomData = storage;
 }
