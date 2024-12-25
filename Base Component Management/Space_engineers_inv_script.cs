@@ -16,13 +16,13 @@ public void Main(string argument, UpdateType Update100)
 
 public class Component
 {
-    public string Name {get;}
-    public string Id {get;}
-    public string DefinitionId {get;}
-    public int Amount {get; set;}
-    public int MinAmount {get; set;}
-    public MyItemType ItemType {get; set;}
-    public MyDefinitionId Blueprint {get; set;}
+    public string Name { get; }
+    public string Id { get; }
+    public string DefinitionId { get; }
+    public int Amount { get; set; }
+    public int MinAmount { get; set; }
+    public MyItemType ItemType { get; set; }
+    public MyDefinitionId Blueprint { get; set; }
 
     public Component(string name, string id, int amount, int minAmount)
     {
@@ -39,7 +39,7 @@ public class Component
         Id = id;
         DefinitionId = definitionId;
         Amount = amount;
-        MinAmount = minAmount;        
+        MinAmount = minAmount;
     }
 }
 
@@ -69,10 +69,10 @@ public void InitComp()
     CompList.Add("GravityGenerator", new Component("Gravity Comp.", "GravityGenerator", "GravityGeneratorComponent", 0, 0));
     CompList.Add("Superconductor", new Component("Superconductors", "Superconductor", 0, 0));
 
-    foreach(var item in CompList.Values)
+    foreach (var item in CompList.Values)
     {
-        MyItemType itemType = new MyItemType("MyObjectBuilder_Component", item.Id);       
-        string s =  "MyObjectBuilder_BlueprintDefinition/" + item.DefinitionId;
+        MyItemType itemType = new MyItemType("MyObjectBuilder_Component", item.Id);
+        string s = "MyObjectBuilder_BlueprintDefinition/" + item.DefinitionId;
         MyDefinitionId blueprint = MyDefinitionId.Parse(s);
         item.Blueprint = blueprint;
         item.ItemType = itemType;
@@ -92,7 +92,7 @@ public void InitContainers()
     {
         Echo($"container -{container.CustomName}- found");
     }
-    
+
     if (Containers.Count > 0)
         Echo($"{Containers.Count} containers found");
     else
@@ -103,6 +103,7 @@ public void InitContainers()
 List<IMyTerminalBlock> Assemblers = new List<IMyTerminalBlock>();
 public void InitAssemblers()
 {
+    Echo("Initializing assemblers");
     string assemblerGroupName = "Base Assemblers";
     var assemblerGroup = GridTerminalSystem.GetBlockGroupWithName(assemblerGroupName);
     assemblerGroup.GetBlocks(Assemblers);
@@ -128,7 +129,7 @@ public void InitScreens()
     {
         Echo($"Screen -{screen.CustomName}- found");
     }
-    
+
     if (Screens.Count > 0)
         Echo($"{Screens.Count} screens found");
     else
@@ -145,7 +146,7 @@ public void PrintToScreen(string input, bool append, int screenNumber)
 public void FindItemAmount()
 {
     int amount = 0;
-  
+
     foreach (var comp in CompList.Values) { comp.Amount = 0; }
 
     foreach (var block in Containers)
@@ -156,7 +157,7 @@ public void FindItemAmount()
             IMyProductionBlock assembler = (IMyProductionBlock)block;
             inventory = assembler.OutputInventory;
         }
-        
+
         foreach (var item in CompList.Values)
         {
             amount = (int)inventory.GetItemAmount(item.ItemType);
@@ -177,18 +178,18 @@ public void CheckItemAmount()
     List<MyProductionItem> queue = new List<MyProductionItem>();
     Dictionary<string, int> queueAmount = new Dictionary<string, int>();
     int assemblerCount = Assemblers.Count();
-    for (int i = 0; i<assemblerCount; i++)
+    for (int i = 0; i < assemblerCount; i++)
     {
-        IMyProductionBlock assembler = (IMyProductionBlock) Assemblers[i];
+        IMyProductionBlock assembler = (IMyProductionBlock)Assemblers[i];
         assembler.GetQueue(queue);
         foreach (var item in queue)
         {
-            string[] name = item.BlueprintId.ToString().Split('/');            
-            
-            if (queueAmount.ContainsKey(name[1]))         
-                queueAmount[name[1]] += (int)item.Amount;                
+            string[] name = item.BlueprintId.ToString().Split('/');
+
+            if (queueAmount.ContainsKey(name[1]))
+                queueAmount[name[1]] += (int)item.Amount;
             else
-                queueAmount.Add(name[1], (int)item.Amount);           
+                queueAmount.Add(name[1], (int)item.Amount);
         }
     }
     PrintToScreen($"\nCurrently queued components:", false, 1);
@@ -196,15 +197,15 @@ public void CheckItemAmount()
     {
         PrintToScreen($"{item.Key}: {item.Value}", true, 1);
     }
-    
-    PrintToScreen ($"\nComponents below minimun amount:", true, 1);
+
+    PrintToScreen($"\nComponents below minimun amount:", true, 1);
     foreach (var comp in CompList.Values)
     {
-        int itemQueueAmount = queueAmount.ContainsKey(comp.DefinitionId)? queueAmount[comp.DefinitionId] : 0;
+        int itemQueueAmount = queueAmount.ContainsKey(comp.DefinitionId) ? queueAmount[comp.DefinitionId] : 0;
         if ((comp.Amount + itemQueueAmount) < comp.MinAmount)
         {
             int diff = comp.MinAmount - (comp.Amount + itemQueueAmount);
-            PrintToScreen ($"{comp.Name} by {diff}", true, 1);
+            PrintToScreen($"{comp.Name} by {diff}", true, 1);
 
             IMyAssembler assembler = FindAvailableAssembler();
 
@@ -220,7 +221,7 @@ public IMyAssembler FindAvailableAssembler()
     int prevMax = 0;
     int index = 0;
     int assemblerCount = Assemblers.Count();
-    for (int i = 0; i<assemblerCount; i++)
+    for (int i = 0; i < assemblerCount; i++)
     {
         assembler = (IMyAssembler)Assemblers[i];
         if (assembler.IsQueueEmpty)
@@ -239,25 +240,36 @@ public IMyAssembler FindAvailableAssembler()
             index = i;
         }
     }
-    
-    return (IMyAssembler)Containers[index];
+
+    return (IMyAssembler)Assemblers[index];
 }
 
 public void ReadSettings()
 {
-    var settingsBlock = GridTerminalSystem.GetBlockWithName("[Base] Base Component Setup");
-    string readString = settingsBlock.CustomData;
-    Echo("readString");
-    if (readString != null)
+    string settingsBlockName = "[Base] Base Component Setup";
+    if (GridTerminalSystem.GetBlockWithName(settingsBlockName) != null)
     {
-        Echo("Test");
-        string[] storage = readString.Split(';');
-        int FUCK = storage.Count();
-        for (int i = 0; i < FUCK; i++) 
+        var settingsBlock = GridTerminalSystem.GetBlockWithName(settingsBlockName);
+        string readString = settingsBlock.CustomData;
+
+        if (readString != null)
         {
-            string[] item = storage[i].Split(',');
-            CompList[item[0]].MinAmount = Int32.Parse(item[1]);
+            Echo("Reading settings");
+            string[] storage = readString.Split(';');
+            int lineCount = storage.Count();
+            for (int i = 0; i < lineCount; i++)
+            {
+                string[] item = storage[i].Split(',');
+                CompList[item[0]].MinAmount = Int32.Parse(item[1]);
+            }
+        }
+        else
+        {
+            Echo("Storage settings not found");
         }
     }
-    
+    else
+    {
+        Echo("Settings block not found");
+    }
 }
