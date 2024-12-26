@@ -6,7 +6,7 @@ public Program()
 
 public void Save()
 {
-    
+    SaveSettings();
 }
 
 public void Main(string argument, UpdateType updateSource)
@@ -65,7 +65,7 @@ public void Output(string text, bool append)
 
 public enum Controls
 {
-    Up, Down, Reset, Save,
+    Up, Down, Reset, Save, ButtonSetup
     Increase10 = 10,
     Increase100 = 100,
     Increase1000 = 1000,
@@ -165,4 +165,26 @@ public void SaveSettings()
 
     string s = string.Join(";", storage);
     self.CustomData = s;
+}
+
+public void ReadSettings()
+{
+    //var settingsBlock = GridTerminalSystem.GetBlockWithName(settingsBlockName);
+    string readString = Me.CustomData;
+
+    if (readString != null)
+    {
+        Echo("Reading settings");
+        string[] storage = readString.Split(';');
+        int lineCount = storage.Count();
+        for (int i = 0; i < lineCount; i++)
+        {
+            string[] item = storage[i].Split(',');
+            CompMinAmount[i].MinAmount = Int32.Parse(item[1]);
+        }
+    }
+    else
+    {
+        Echo("Storage settings not found");
+    }
 }
