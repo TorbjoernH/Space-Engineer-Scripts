@@ -7,6 +7,8 @@ public Program()
     InitAssemblers();
 }
 
+public string TAG = "[Base] ";
+
 public void Main(string argument, UpdateType Update100)
 {
     FindItemAmount();
@@ -118,8 +120,8 @@ public void InitScreens()
     var screenGroup = GridTerminalSystem.GetBlockGroupWithName(screenGroupName);
     screenGroup.GetBlocks(Screens);
     */
-    var compListScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("[Base] Component List Screen");
-    var compQueueScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName("[Base] Component Queue Screen");
+    var compListScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName($"{TAG}Component List Screen");
+    var compQueueScreen = (IMyTextPanel)GridTerminalSystem.GetBlockWithName($"{TAG}Component Queue Screen");
     Screens.Add(compListScreen);
     Screens.Add(compQueueScreen);
 
@@ -136,6 +138,11 @@ public void InitScreens()
         Echo($"No screens found");
 }
 
+/* Output function
+*   Input: Message to printed as a string
+*   Append: Boolean determinging whether to override current message
+*   ScreenNumber: Which screen to print to. 0 for list of components, 1 for queue screen
+*/
 public void PrintToScreen(string input, bool append, int screenNumber)
 {
     IMyTextPanel outputScreen = (IMyTextPanel)Screens[screenNumber];
@@ -214,6 +221,7 @@ public void CheckItemAmount()
     }
 }
 
+// Function for finding assembler with lowest queue
 public IMyAssembler FindAvailableAssembler()
 {
     IMyAssembler assembler = null;
@@ -244,9 +252,12 @@ public IMyAssembler FindAvailableAssembler()
     return (IMyAssembler)Assemblers[index];
 }
 
+/* Function for reading settings from setup script.
+*  Attempts to find setup block named "Base Component Setup" and read settings from customdata property  
+*/
 public void ReadSettings()
 {
-    string settingsBlockName = "[Base] Base Component Setup";
+    string settingsBlockName = $"{TAG}Base Component Setup";
     if (GridTerminalSystem.GetBlockWithName(settingsBlockName) != null)
     {
         var settingsBlock = GridTerminalSystem.GetBlockWithName(settingsBlockName);
