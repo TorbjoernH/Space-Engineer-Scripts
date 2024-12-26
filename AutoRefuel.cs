@@ -95,12 +95,22 @@ public void InitBatteries()
 
     if (batteryBlocks.Count > 0)
     {
-        foreach (IMyBatteryBlock battery in batteryBlocks)
-        {
-            if (battery.IsSameConstructAs(Me)) { continue; }
+        // foreach (IMyBatteryBlock battery in batteryBlocks)
+        // {
+        //     if (battery.IsSameConstructAs(Me)) { continue; }
 
-            batteryBlocks.Remove(battery);
-        }
+        //     batteryBlocks.Remove(battery);
+        // }
+
+        /* As far as I have read/understand, manipulating a collection you are iterating over using a foreach loop
+           is either considered very bad practice or not possible at all, possible the former as it script worked so far.
+
+           Proposed change does the same as the foreach loop, but instead uses the list method RemoveAll,
+           which removes all members of the list that meets the predicate. 
+           Probably needs testing first
+        */
+
+        batteryBlocks.RemoveAll(IsSameConstructAs);
     }
 }
 
@@ -110,12 +120,15 @@ public void InitThrust()
 
     if (thrusterBlocks.Count > 0)
     {
+        /*
         foreach (IMyThrust thrust in thrusterBlocks)
         {
             if (thrust.IsSameConstructAs(Me)) { continue; }
 
             thrusterBlocks.Remove(thrust);
         }
+        */
+        thrusterBlocks.RemoveAll(IsSameConstructAs);
     }
 }
 
@@ -125,11 +138,19 @@ public void InitTanks()
 
     if (tankBlocks.Count > 0)
     {
+        /*
         foreach (IMyGasTank tank in tankBlocks)
         {
             if (tank.IsSameConstructAs(Me)) { continue; }
 
             tankBlocks.Remove(tank);
         }
+        */
+        tankBlocks.RemoveAll(IsSameConstructAs);
     }
+}
+
+public bool IsSameConstructAs(var block)
+{
+    return block.IsSameConstructAs(Me);
 }
