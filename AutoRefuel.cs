@@ -23,15 +23,26 @@ public Program()
 public void Main(string argument, UpdateType updateSource)
 {
     if (connector == null) { return; }
+    
+    // if (connector.IsConnected)
+    // {
+    //     OnConnect();
+    // }
+    // else
+    // {
+    //     OnDisconnect();
+    // }
 
-    if (connector.IsConnected)
-    {
+
+    /* Proposed change to make it work with an event block
+       To make this work, have an event block trigger on connector connect
+       then make the first slot in the event block tool bar call the programmable block with argument "connect"
+       and the second slot call the programmable block with the argument "disconnect"
+    */
+    if(argument=="connect")
         OnConnect();
-    }
-    else
-    {
+    else if(argument=="disconnect")
         OnDisconnect();
-    }
 }
 
 public void OnConnect()
