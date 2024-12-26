@@ -18,17 +18,30 @@ public void Main(string argument, UpdateType updateSource)
 
 public class Comp
 {
-    public string Name {get;}
-    public string Id {get;}
-    public int MinAmount {get; set;}
-    public bool Selected {get; set;}
-    
+    public string Name { get; }
+    public string Id { get; }
+    public int MinAmount { get; set; }
+    public bool Selected { get; set; }
+
     public Comp(string name, string id, int minAmount, bool selected)
     {
         Name = name;
         Id = id;
         MinAmount = minAmount;
         Selected = selected;
+    }
+
+    public void Increase(int amount)
+    {
+        MinAmount += amount;
+    }
+
+    public void Decrease(int amount)
+    {
+        if ((MinAmount + amount) < 0)
+            MinAmount = 0;
+        else
+            MinAmount += amount;
     }
 }
 
@@ -65,7 +78,7 @@ public void Output(string text, bool append)
 
 public enum Controls
 {
-    Up, Down, Reset, Save, ButtonSetup
+    Up, Down, Reset, Save,
     Increase10 = 10,
     Increase100 = 100,
     Increase1000 = 1000,
@@ -76,18 +89,7 @@ public enum Controls
     Decrease10000 = -10000,
 }
 
-public void Increase(Comp comp, int amount)
-{
-    comp.MinAmount += amount;
-}
 
-public void Decrease(Comp comp, int amount)
-{
-    if ((comp.MinAmount + amount) < 0)
-        comp.MinAmount = 0;
-    else
-        comp.MinAmount += amount;
-}
 
 public void Control(Controls c)
 {
@@ -96,7 +98,6 @@ public void Control(Controls c)
     {
         case Controls.Up:
         {
-            
             CompMinAmount[i].Selected = false;
             if (i == 0)
                 i = CompMinAmount.Count-1;
@@ -128,10 +129,10 @@ public void Control(Controls c)
             break;
         }
         case Controls.Increase10: case Controls.Increase100: case Controls.Increase1000: case Controls.Increase10000:
-            Increase(CompMinAmount[i], (int)c);
+            CompMinAmount[i].Increase((int)c);
             break;
         case Controls.Decrease10: case Controls.Decrease100: case Controls.Decrease1000: case Controls.Decrease10000:
-            Decrease(CompMinAmount[i], (int)c);
+            CompMinAmount[i].Decrease((int)c);
             break;
             
     }
