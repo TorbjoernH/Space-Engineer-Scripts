@@ -23,20 +23,9 @@ public Program()
 
 public void Main(string argument, UpdateType updateSource)
 {
+    // Ew
     if (connector == null) { return; }
     
-    // if (connector.IsConnected)
-    // {
-    //     OnConnect();
-    // }
-    // else
-    // {
-    //     OnDisconnect();
-    // }
-
-    foreach (var block in thrusterBlocks) {Echo($"{block.CustomName}");}
-    foreach (var block in tankBlocks) {Echo($"{block.CustomName}");}
-    foreach (var block in batteryBlocks) {Echo($"{block.CustomName}");}
     /* Proposed change to make it work with an event block
        To make this work, have an event block trigger on connector connect
        then make the first slot in the event block tool bar call the programmable block with argument "connect"
@@ -134,14 +123,6 @@ public void InitThrust()
 
     if (thrusterBlocks.Count > 0)
     {
-        /*
-        foreach (IMyThrust thrust in thrusterBlocks)
-        {
-            if (thrust.IsSameConstructAs(Me)) { continue; }
-
-            thrusterBlocks.Remove(thrust);
-        }
-        */
         thrusterBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
 }
@@ -152,14 +133,6 @@ public void InitTanks()
 
     if (tankBlocks.Count > 0)
     {
-        /*
-        foreach (IMyGasTank tank in tankBlocks)
-        {
-            if (tank.IsSameConstructAs(Me)) { continue; }
-
-            tankBlocks.Remove(tank);
-        }
-        */
         tankBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
 }
