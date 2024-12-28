@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Github\\Space-Engineers-Base-Inventory-Script\\Dock Info\\Dock Info\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{606685A8-FA53-4B47-A3B3-0AF5147C7651}|Dock Info\\Dock Info.csproj|c:\\github\\space-engineers-base-inventory-script\\dock info\\dock info\\dock info\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{606685A8-FA53-4B47-A3B3-0AF5147C7651}|Dock Info\\Dock Info.csproj|solutionrelative:dock info\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Github\\Space-Engineers-Base-Inventory-Script\\Dock Info\\Dock Info\\Dock Info\\Program.cs",
+              "RelativeDocumentMoniker": "Dock Info\\Program.cs",
+              "ToolTip": "C:\\Github\\Space-Engineers-Base-Inventory-Script\\Dock Info\\Dock Info\\Dock Info\\Program.cs",
+              "RelativeToolTip": "Dock Info\\Program.cs",
+              "ViewState": "AgIAAFoAAAAAAAAAAADwvyoAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-08T21:35:53.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

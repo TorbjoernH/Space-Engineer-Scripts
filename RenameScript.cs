@@ -9,7 +9,7 @@ public void Main(string argument, UpdateType updateSource)
 {
     foreach (IMyTerminalBlock block in allBlocks)
     {
-        if (!block.IsSameConstructAs(Me) { continue; }
+        if (!block.IsSameConstructAs(Me)) { continue; }
 
         if (block.CustomName.Contains(block.CubeGrid.CustomName)) { continue; }
 
