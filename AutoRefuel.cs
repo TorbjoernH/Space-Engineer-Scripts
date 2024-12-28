@@ -16,8 +16,9 @@ public Program()
 
     InitTanks();
 
-    connector = GridTerminalSystem.GetBlockWithName("[" + Me.CubeGrid.CustomName + "] " + "Connector (Main)") as IMyShipConnector;
-
+    //connector = GridTerminalSystem.GetBlockWithName("[" + Me.CubeGrid.CustomName + "] " + "Connector (Main)") as IMyShipConnector;
+    connector = GridTerminalSystem.GetBlockWithName("[Hinge] Connector") as IMyShipConnector;
+    
 }
 
 public void Main(string argument, UpdateType updateSource)
@@ -33,7 +34,9 @@ public void Main(string argument, UpdateType updateSource)
     //     OnDisconnect();
     // }
 
-
+    foreach (var block in thrusterBlocks) {Echo($"{block.CustomName}");}
+    foreach (var block in tankBlocks) {Echo($"{block.CustomName}");}
+    foreach (var block in batteryBlocks) {Echo($"{block.CustomName}");}
     /* Proposed change to make it work with an event block
        To make this work, have an event block trigger on connector connect
        then make the first slot in the event block tool bar call the programmable block with argument "connect"
@@ -121,7 +124,7 @@ public void InitBatteries()
            Probably needs testing first
         */
 
-        batteryBlocks.RemoveAll(IsSameConstructAs);
+        batteryBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
 }
 
@@ -139,7 +142,7 @@ public void InitThrust()
             thrusterBlocks.Remove(thrust);
         }
         */
-        thrusterBlocks.RemoveAll(IsSameConstructAs);
+        thrusterBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
 }
 
@@ -157,11 +160,6 @@ public void InitTanks()
             tankBlocks.Remove(tank);
         }
         */
-        tankBlocks.RemoveAll(IsSameConstructAs);
+        tankBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
-}
-
-public bool IsSameConstructAs(var block)
-{
-    return block.IsSameConstructAs(Me);
 }
