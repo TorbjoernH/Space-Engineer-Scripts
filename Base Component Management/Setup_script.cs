@@ -68,6 +68,7 @@ public void Setup()
     CompMinAmount.Add(new Comp("Reactor Comp.", "Reactor", 0, false));
     CompMinAmount.Add(new Comp("Gravity Comp.", "GravityGenerator", 0, false));
     CompMinAmount.Add(new Comp("Superconductors", "Superconductor", 0, false));
+    CompMinAmount.Add(new Comp("Explosives", "Explosives", 0, false));
 }
 
 public void Output(string text, bool append)
