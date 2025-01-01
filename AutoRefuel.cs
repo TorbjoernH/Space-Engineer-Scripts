@@ -4,8 +4,10 @@ List<IMyBatteryBlock> batteryBlocks = new List<IMyBatteryBlock>();
 List<IMyThrust> thrusterBlocks = new List<IMyThrust>();
 //HydroTanks
 List<IMyGasTank> tankBlocks = new List<IMyGasTank>();
-//Connector
-IMyShipConnector connector;
+//Antennas
+List<IMyRadioAntenna> antennas = new List<IMyRadioAntenna>();
+//Ore detector
+List<IMyOreDetector> oreDetectors = new List<IMyOreDetector>();
 
 public Program()
 {
@@ -16,21 +18,14 @@ public Program()
 
     InitTanks();
 
-    //connector = GridTerminalSystem.GetBlockWithName("[" + Me.CubeGrid.CustomName + "] " + "Connector (Main)") as IMyShipConnector;
-    connector = GridTerminalSystem.GetBlockWithName("[Hinge] Connector") as IMyShipConnector;
+    InitAntennas();
+
+    InitOreDetectors();
     
 }
 
 public void Main(string argument, UpdateType updateSource)
 {
-    // Ew
-    if (connector == null) { return; }
-    
-    /* Proposed change to make it work with an event block
-       To make this work, have an event block trigger on connector connect
-       then make the first slot in the event block tool bar call the programmable block with argument "connect"
-       and the second slot call the programmable block with the argument "disconnect"
-    */
     if(argument=="connect")
         OnConnect();
     else if(argument=="disconnect")
@@ -63,6 +58,21 @@ public void OnConnect()
         }
     }
 
+    if (antennas.Count > 0)
+    {
+        foreach (IMyRadioAntenna antenna in antennas)
+        {
+            antenna.Enabled = false;
+        }
+    }
+
+    if (oreDetectors.Count > 0)
+    {
+        foreach (IMyOreDetector oreDetector in oreDetectors)
+        {
+            oreDetector.Enabled = false;
+        }
+    }
 }
 
 public void OnDisconnect()
@@ -90,6 +100,22 @@ public void OnDisconnect()
             thruster.Enabled = true;
         }
     }
+
+    if (antennas.Count > 0)
+    {
+        foreach (IMyRadioAntenna antenna in antennas)
+        {
+            antenna.Enabled = true;
+        }
+    }
+
+    if (oreDetectors.Count > 0)
+    {
+        foreach (IMyOreDetector oreDetector in oreDetectors)
+        {
+            oreDetector.Enabled = true;
+        }
+    }
 }
 
 public void InitBatteries()
@@ -98,21 +124,6 @@ public void InitBatteries()
 
     if (batteryBlocks.Count > 0)
     {
-        // foreach (IMyBatteryBlock battery in batteryBlocks)
-        // {
-        //     if (battery.IsSameConstructAs(Me)) { continue; }
-
-        //     batteryBlocks.Remove(battery);
-        // }
-
-        /* As far as I have read/understand, manipulating a collection you are iterating over using a foreach loop
-           is either considered very bad practice or not possible at all, possible the former as it script worked so far.
-
-           Proposed change does the same as the foreach loop, but instead uses the list method RemoveAll,
-           which removes all members of the list that meets the predicate. 
-           Probably needs testing first
-        */
-
         batteryBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
 }
@@ -134,5 +145,25 @@ public void InitTanks()
     if (tankBlocks.Count > 0)
     {
         tankBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
+    }
+}
+
+public void InitAntennas()
+{
+    GridTerminalSystem.GetBlocksOfType<IMyRadioAntenna>(antennas);
+
+    if (antennas.Count > 0)
+    {
+        antennas.RemoveAll(x => x.IsSameConstructAs(Me) == false);
+    }
+}
+
+public void InitOreDetectors()
+{
+    GridTerminalSystem.GetBlocksOfType<IMyOreDetector>(oreDetectors);
+
+    if (oreDetectors.Count > 0)
+    {
+        oreDetectors.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
 }
