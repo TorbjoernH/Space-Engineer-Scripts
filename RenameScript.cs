@@ -13,5 +13,6 @@ public void Main(string argument, UpdateType updateSource)
         {
             block.CustomName = "[" + block.CubeGrid.CustomName + "] " + block.CustomName;
         }
+
     }
 }
