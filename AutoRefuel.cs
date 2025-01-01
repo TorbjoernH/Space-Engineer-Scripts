@@ -4,8 +4,10 @@ List<IMyBatteryBlock> batteryBlocks = new List<IMyBatteryBlock>();
 List<IMyThrust> thrusterBlocks = new List<IMyThrust>();
 //HydroTanks
 List<IMyGasTank> tankBlocks = new List<IMyGasTank>();
-//Connector
-IMyShipConnector connector;
+//Antennas
+List<IMyRadioAntenna> antennas = new List<IMyRadioAntenna>();
+//Ore detector
+List<IMyOreDetector> oreDetectors = new List<IMyOreDetector>();
 
 public Program()
 {
@@ -16,22 +18,18 @@ public Program()
 
     InitTanks();
 
-    connector = GridTerminalSystem.GetBlockWithName("[" + Me.CubeGrid.CustomName + "] " + "Connector (Main)") as IMyShipConnector;
+    InitAntennas();
 
+    InitOreDetectors();
+    
 }
 
 public void Main(string argument, UpdateType updateSource)
 {
-    if (connector == null) { return; }
-
-    if (connector.IsConnected)
-    {
+    if(argument=="connect")
         OnConnect();
-    }
-    else
-    {
+    else if(argument=="disconnect")
         OnDisconnect();
-    }
 }
 
 public void OnConnect()
@@ -60,6 +58,21 @@ public void OnConnect()
         }
     }
 
+    if (antennas.Count > 0)
+    {
+        foreach (IMyRadioAntenna antenna in antennas)
+        {
+            antenna.Enabled = false;
+        }
+    }
+
+    if (oreDetectors.Count > 0)
+    {
+        foreach (IMyOreDetector oreDetector in oreDetectors)
+        {
+            oreDetector.Enabled = false;
+        }
+    }
 }
 
 public void OnDisconnect()
@@ -87,6 +100,22 @@ public void OnDisconnect()
             thruster.Enabled = true;
         }
     }
+
+    if (antennas.Count > 0)
+    {
+        foreach (IMyRadioAntenna antenna in antennas)
+        {
+            antenna.Enabled = true;
+        }
+    }
+
+    if (oreDetectors.Count > 0)
+    {
+        foreach (IMyOreDetector oreDetector in oreDetectors)
+        {
+            oreDetector.Enabled = true;
+        }
+    }
 }
 
 public void InitBatteries()
@@ -95,12 +124,7 @@ public void InitBatteries()
 
     if (batteryBlocks.Count > 0)
     {
-        foreach (IMyBatteryBlock battery in batteryBlocks)
-        {
-            if (battery.IsSameConstructAs(Me)) { continue; }
-
-            batteryBlocks.Remove(battery);
-        }
+        batteryBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
 }
 
@@ -110,12 +134,7 @@ public void InitThrust()
 
     if (thrusterBlocks.Count > 0)
     {
-        foreach (IMyThrust thrust in thrusterBlocks)
-        {
-            if (thrust.IsSameConstructAs(Me)) { continue; }
-
-            thrusterBlocks.Remove(thrust);
-        }
+        thrusterBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
 }
 
@@ -125,11 +144,26 @@ public void InitTanks()
 
     if (tankBlocks.Count > 0)
     {
-        foreach (IMyGasTank tank in tankBlocks)
-        {
-            if (tank.IsSameConstructAs(Me)) { continue; }
+        tankBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
+    }
+}
 
-            tankBlocks.Remove(tank);
-        }
+public void InitAntennas()
+{
+    GridTerminalSystem.GetBlocksOfType<IMyRadioAntenna>(antennas);
+
+    if (antennas.Count > 0)
+    {
+        antennas.RemoveAll(x => x.IsSameConstructAs(Me) == false);
+    }
+}
+
+public void InitOreDetectors()
+{
+    GridTerminalSystem.GetBlocksOfType<IMyOreDetector>(oreDetectors);
+
+    if (oreDetectors.Count > 0)
+    {
+        oreDetectors.RemoveAll(x => x.IsSameConstructAs(Me) == false);
     }
 }

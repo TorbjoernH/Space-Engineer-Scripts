@@ -70,6 +70,7 @@ public void InitComp()
     CompList.Add("Reactor", new Component("Reactor Comp.", "Reactor", "ReactorComponent", 0, 0));
     CompList.Add("GravityGenerator", new Component("Gravity Comp.", "GravityGenerator", "GravityGeneratorComponent", 0, 0));
     CompList.Add("Superconductor", new Component("Superconductors", "Superconductor", 0, 0));
+    CompList.Add("Explosives", new Component("Explosives", "Explosives", "ExplosivesComponent", 0, 500));
 
     foreach (var item in CompList.Values)
     {
