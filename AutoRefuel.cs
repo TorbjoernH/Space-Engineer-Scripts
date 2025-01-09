@@ -73,6 +73,7 @@ public void OnConnect()
             oreDetector.Enabled = false;
         }
     }
+
 }
 
 public void OnDisconnect()
@@ -118,52 +119,11 @@ public void OnDisconnect()
     }
 }
 
-public void InitBatteries()
+public void InitBlocks()
 {
-    GridTerminalSystem.GetBlocksOfType<IMyBatteryBlock>(batteryBlocks);
-
-    if (batteryBlocks.Count > 0)
-    {
-        batteryBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
-    }
-}
-
-public void InitThrust()
-{
-    GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusterBlocks);
-
-    if (thrusterBlocks.Count > 0)
-    {
-        thrusterBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
-    }
-}
-
-public void InitTanks()
-{
-    GridTerminalSystem.GetBlocksOfType<IMyGasTank>(tankBlocks);
-
-    if (tankBlocks.Count > 0)
-    {
-        tankBlocks.RemoveAll(x => x.IsSameConstructAs(Me) == false);
-    }
-}
-
-public void InitAntennas()
-{
-    GridTerminalSystem.GetBlocksOfType<IMyRadioAntenna>(antennas);
-
-    if (antennas.Count > 0)
-    {
-        antennas.RemoveAll(x => x.IsSameConstructAs(Me) == false);
-    }
-}
-
-public void InitOreDetectors()
-{
-    GridTerminalSystem.GetBlocksOfType<IMyOreDetector>(oreDetectors);
-
-    if (oreDetectors.Count > 0)
-    {
-        oreDetectors.RemoveAll(x => x.IsSameConstructAs(Me) == false);
-    }
+    GridTerminalSystem.GetBlocksOfType<IMyBatteryBlock>(batteryBlocks, x => x.IsSameConstructAs(Me));
+    GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusterBlocks, x => x.IsSameConstructAs(Me));
+    GridTerminalSystem.GetBlocksOfType<IMyGasTank>(tankBlocks, x => x.IsSameConstructAs(Me));
+    GridTerminalSystem.GetBlocksOfType<IMyRadioAntenna>(antennas, x => x.IsSameConstructAs(Me));
+    GridTerminalSystem.GetBlocksOfType<IMyOreDetector>(oreDetectors, x => x.IsSameConstructAs(Me));
 }
