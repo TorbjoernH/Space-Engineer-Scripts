@@ -69,6 +69,12 @@ public void Setup()
     CompMinAmount.Add(new Comp("Gravity Comp.", "GravityGenerator", 0, false));
     CompMinAmount.Add(new Comp("Superconductors", "Superconductor", 0, false));
     CompMinAmount.Add(new Comp("Explosives", "Explosives", 0, false));
+
+    CompMinAmount.Add(new Comp("Rockets", "Missile200mm", 0, false));
+    CompMinAmount.Add(new Comp("Gatling Ammo Box", "NATO_25x184mm", 0, false));
+    CompMinAmount.Add(new Comp("Artillery Shell", "LargeCalibreAmmo", 0, false));
+    CompMinAmount.Add(new Comp("Assault Cannon Shell", "MediumCalibreAmmo", 0, false));
+    CompMinAmount.Add(new Comp("Autocannon Mag", "AutocannonClip", 0, false));
 }
 
 public void Output(string text, bool append)

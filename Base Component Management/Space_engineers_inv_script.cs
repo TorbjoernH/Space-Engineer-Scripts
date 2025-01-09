@@ -16,16 +16,19 @@ public void Main(string argument, UpdateType Update100)
     ReadSettings();
 }
 
-public class Component
+public abstract class Item
 {
-    public string Name { get; }
-    public string Id { get; }
-    public string DefinitionId { get; }
+    public string Name { get; set; }
+    public string Id { get; set; }
+    public string DefinitionId { get; set; }
     public int Amount { get; set; }
     public int MinAmount { get; set; }
     public MyItemType ItemType { get; set; }
     public MyDefinitionId Blueprint { get; set; }
+}
 
+public class Component : Item
+{
     public Component(string name, string id, int amount, int minAmount)
     {
         Name = name;
@@ -45,7 +48,20 @@ public class Component
     }
 }
 
-Dictionary<string, Component> CompList = new Dictionary<string, Component>();
+public class Ammo : Item
+{
+    public Ammo(string name, string id, string definitionId, int amount, int minAmount)
+    {
+        Name = name;
+        Id = id;
+        DefinitionId = definitionId;
+        Amount = amount;
+        MinAmount = minAmount;
+    }
+}
+
+
+Dictionary<string, Item> CompList = new Dictionary<string, Item>();
 
 public void InitComp()
 {
@@ -72,9 +88,23 @@ public void InitComp()
     CompList.Add("Superconductor", new Component("Superconductors", "Superconductor", 0, 0));
     CompList.Add("Explosives", new Component("Explosives", "Explosives", "ExplosivesComponent", 0, 500));
 
+    // Ammo 
+    CompList.Add("Missile200mm", new Ammo("Rocket", "Missile200mm", "Position0100_Missile200mm", 0, 0));
+    CompList.Add("NATO_25x184mm", new Ammo("Gatling Ammo Box", "NATO_25x184mm", "Position0080_NATO_25x184mmMagazine", 0, 0));
+    CompList.Add("LargeCalibreAmmo", new Ammo("Artillery Shell", "LargeCalibreAmmo", "Position0120_LargeCalibreAmmo", 0, 0));
+    CompList.Add("MediumCalibreAmmo", new Ammo("Assault Cannon Shell", "MediumCalibreAmmo", "Position0110_MediumCalibreAmmo", 0, 0));
+    CompList.Add("AutocannonClip", new Ammo("Autocannon Mag.", "AutocannonClip", "Position0090_AutocannonClip", 0, 0));
+
+
+    string myObjectBuilderType;
     foreach (var item in CompList.Values)
     {
-        MyItemType itemType = new MyItemType("MyObjectBuilder_Component", item.Id);
+        myObjectBuilderType = "MyObjectBuilder_Component";
+        
+        if (item is Ammo)
+            myObjectBuilderType = "MyObjectBuilder_AmmoMagazine";
+
+        MyItemType itemType = new MyItemType(myObjectBuilderType, item.Id);
         string s = "MyObjectBuilder_BlueprintDefinition/" + item.DefinitionId;
         MyDefinitionId blueprint = MyDefinitionId.Parse(s);
         item.Blueprint = blueprint;
@@ -110,6 +140,15 @@ public void InitAssemblers()
     string assemblerGroupName = "Base Assemblers";
     var assemblerGroup = GridTerminalSystem.GetBlockGroupWithName(assemblerGroupName);
     assemblerGroup.GetBlocks(Assemblers);
+    Containers.AddRange(Assemblers);
+}
+
+public void InitTurrets()
+{
+    Echo("Initializing turrets");
+    List<IMyLargeTurretBase> turrets = new List<IMyLargeTurretBase>();
+    GridTerminalSystem.GetBlocksOfType<IMyLargeTurretBase>(turrets, x => x.IsSameConstructAs(Me));
+    Containers.AddRange(turrets);
 }
 
 
