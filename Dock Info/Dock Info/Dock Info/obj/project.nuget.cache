@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HobiV1j+LfA=",
+  "dgSpecHash": "dxjsXxp5PvE=",
   "success": true,
-  "projectFilePath": "C:\\Github\\Space-Engineers-Base-Inventory-Script\\Dock Info\\Dock Info\\Dock Info\\Dock Info.csproj",
+  "projectFilePath": "C:\\Github\\Space-Engineer-Scripts\\Dock Info\\Dock Info\\Dock Info\\Dock Info.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\torbj\\.nuget\\packages\\mal.mdk2.pbanalyzers\\2.1.10\\mal.mdk2.pbanalyzers.2.1.10.nupkg.sha512",
     "C:\\Users\\torbj\\.nuget\\packages\\mal.mdk2.pbpackager\\2.0.13\\mal.mdk2.pbpackager.2.0.13.nupkg.sha512",

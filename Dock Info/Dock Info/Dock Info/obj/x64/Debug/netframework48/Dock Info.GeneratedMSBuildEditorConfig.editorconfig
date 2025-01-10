@@ -1,6 +1,6 @@
 is_global = true
-build_property.ProjectDir = C:\Github\Space-Engineers-Base-Inventory-Script\Dock Info\Dock Info\Dock Info\
-build_property.ProjectDir = C:\Github\Space-Engineers-Base-Inventory-Script\Dock Info\Dock Info\Dock Info\
+build_property.ProjectDir = C:\Github\Space-Engineer-Scripts\Dock Info\Dock Info\Dock Info\
+build_property.ProjectDir = C:\Github\Space-Engineer-Scripts\Dock Info\Dock Info\Dock Info\
 build_property.Mdk-IgnorePaths = obj\**\*;MDK\**\*;**\*.debug.cs
 build_property.RootNamespace = IngameScript
 build_property.EnableComHosting = 

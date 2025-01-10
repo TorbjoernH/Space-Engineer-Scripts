@@ -11,17 +11,7 @@ List<IMyOreDetector> oreDetectors = new List<IMyOreDetector>();
 
 public Program()
 {
-
-    InitBatteries();
-
-    InitThrust();
-
-    InitTanks();
-
-    InitAntennas();
-
-    InitOreDetectors();
-    
+    InitBlocks
 }
 
 public void Main(string argument, UpdateType updateSource)
