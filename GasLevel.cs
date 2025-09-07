@@ -1,21 +1,57 @@
-public namespace GasLevel
+public namespace GasLevel // Don't Copy the Namespace
 {
-    
-    
+    int counter = 0;
+    string SCREEN_NAME = "testpanel"; // IF YOU ARE USING A LCD SCREEN, TYPE THE NAME OF THE SCREEN HERE, OTHERWISE LEAVE EMPTY
+    int SCREEN_NUMBER = 0; // IF YOU ARE USING AN LCD DISPLAY IN COCKPIT OR OTHER BLOCK, CHANGE THE SCREENNUMBER HERE
+    string COCKPIT_NAME = "Cab Cockpit"; // NAME OF COCKPIT OR BLOCK, WHERE THE DISPLAY IS
+    IMyTextSurface SCREEN = null;
+    List<IMyTerminalBlock> INVENTORY_LIST = new List<IMyTerminalBlock>();
     public Program()
     {
         Runtime.UpdateFrequency = UpdateFrequency.Update100;
         SetupTanks();
+        INVENTORY_LIST = SetupInventories();
+        SCREEN = SCREEN_NAME.Length > 0 ? SetupScreen(SCREEN_NAME) : SetupScreen(COCKPIT_NAME, SCREEN_NUMBER);
+
     }
     
     public void Main(string argument, UpdateType Update100)
     {
+        counter++;
         GasInfo o2Info = GetTankLevel(OXYGEN_TANKS);
         GasInfo hydrogenInfo = GetTankLevel(HYDROGEN_TANKS);
-        PrintOutput(o2Info, hydrogenInfo);
+        int iceLevel = GetIceAmount();
+        PrintOutput(o2Info, hydrogenInfo, iceLevel, SCREEN);
 
 
+        if (counter % 10 == 0)
+        {
+            SetupTanks();
+        }
       
+    }
+
+    public List<IMyTerminalBlock> SetupInventories()
+    {
+        List<IMyTerminalBlock> temp = new List<IMyTerminalBlock>();
+        GridTerminalSystem.GetBlocksOfType(temp, x => x.HasInventory && x.IsSameConstructAs(Me));
+        Echo($"{temp.Count()}");
+        foreach (var x in temp)
+        {
+            Echo($"{x.CustomName}");
+        }
+
+        return temp;
+    }
+    public IMyTextSurface SetupScreen(string screenName)
+    {
+        return (IMyTextSurface)GridTerminalSystem.GetBlockWithName(screenName);
+    }
+
+    public IMyTextSurface SetupScreen(string cockpitName, int screenNumber)
+    {
+        IMyCockpit cockpit = (IMyCockpit)GridTerminalSystem.GetBlockWithName(cockpitName);
+        return (IMyTextSurface)cockpit.GetSurface(screenNumber);
     }
 
     List<IMyGasTank> OXYGEN_TANKS = new List<IMyGasTank>();
@@ -32,52 +68,68 @@ public namespace GasLevel
     
     public class GasInfo
     {
-        public float GasLevel;
-        public float MaxCapacity;
+        public double GasLevel;
+        public double MaxCapacity;
 
-        public GasInfo(float gasLevel, float maxCapacity)
+        public GasInfo(double gasLevel, double maxCapacity)
         {
             GasLevel = gasLevel;
             MaxCapacity = maxCapacity;
         }
-    }
+    };
 
     public GasInfo GetTankLevel(List<IMyGasTank> tanks)
     {
-        float gasLevel = 0;
-        float maxCapacity = 0;
+        double gasLevel = 0;
+        double maxCapacity = 0;
 
         foreach (IMyGasTank tank in tanks)
         {
-            Echo(tank.CustomName);
             maxCapacity += tank.Capacity;
-            gasLevel += (float)(tank.Capacity * tank.FilledRatio);
+            gasLevel += tank.Capacity * tank.FilledRatio;
         }
 
         return new GasInfo(gasLevel, maxCapacity);
     }
 
-    public void PrintOutput(GasInfo oxygen, GasInfo hydrogen)
+    public int GetIceAmount()
     {
-        IMyTextPanel screen = GridTerminalSystem.GetBlockWithName("testpanel") as IMyTextPanel;
-        int barLength = 50;
+        int amount = 0;
+        MyItemType ice = new MyItemType("MyObjectBuilder_Ore", "Ice");
+        foreach (var block in INVENTORY_LIST)
+        {
+            for (int i = 0; i < block.InventoryCount; i++)
+            {
+                var inv = block.GetInventory(i);
+                amount += inv.GetItemAmount(ice).ToIntSafe();
+            }
+        }
 
-        float oxygenLevel = oxygen.GasLevel;
-        float maxOxygen = oxygen.MaxCapacity;
+        return amount;
+    }
 
-        float hydrogenLevel = hydrogen.GasLevel;
-        float maxHydrogen = hydrogen.MaxCapacity;
+    public void PrintOutput(GasInfo oxygen, GasInfo hydrogen, int iceLevel, IMyTextSurface screen)
+    {
+        int barLength = 75;
+
+        double oxygenLevel = oxygen.GasLevel;
+        double maxOxygen = oxygen.MaxCapacity;
+
+        double hydrogenLevel = hydrogen.GasLevel;
+        double maxHydrogen = hydrogen.MaxCapacity;
 
         int oxygenPercentage = maxOxygen > 0 ? (int)((oxygenLevel / maxOxygen) * barLength) : 0;
         int hydrogenPercentage = maxHydrogen > 0 ? (int)((hydrogenLevel / maxHydrogen) * barLength) : 0;
-        
+
         string oxygenOutput = "[" + new string('|', oxygenPercentage) + new string('\'', barLength - oxygenPercentage) + "]";
         string hydrogenOutput = "[" + new string('|', hydrogenPercentage) + new string('\'', barLength - hydrogenPercentage) + "]";
-        
-        screen.WriteText($"Total Oxygen \n", false);
+
+        screen.WriteText($"Oxygen:    {(int)oxygen.GasLevel} L / {(int)oxygen.MaxCapacity} L\n", false);
         screen.WriteText(oxygenOutput, true);
-        
-        screen.WriteText($"\nTotal Hydrogen \n", true);
+
+        screen.WriteText($"\nHydrogen:     {(int)hydrogen.GasLevel} L /{(int)hydrogen.MaxCapacity} L\n", true);
         screen.WriteText(hydrogenOutput, true);
+
+        screen.WriteText($"\nIce:   {iceLevel} kg", true);    
     }
 }
